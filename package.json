@@ -1,0 +1,72 @@
+{
+  "name": "vite-plugin-shopify-import-maps",
+  "version": "0.0.0",
+  "description": "Vite plugin for developing Shopify themes with import-maps",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slavamak/vite-plugin-shopify-import-maps.git"
+  },
+  "bugs": {
+    "url": "https://github.com/slavamak/vite-plugin-shopify-import-maps/issues"
+  },
+  "homepage": "https://github.com/slavamak/vite-plugin-shopify-import-maps#readme",
+  "author": "Slava Maksimov <hello@slavamak.com>",
+  "keywords": [
+    "vite",
+    "plugin",
+    "shopify",
+    "import-maps",
+    "shopify-import-maps"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --ext .ts ."
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "standard-with-typescript"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    },
+    "ignorePatterns": [
+      "dist"
+    ]
+  },
+  "tsup": {
+    "entry": [
+      "./src/index.ts"
+    ],
+    "format": "esm",
+    "dts": true,
+    "clean": true
+  },
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "eslint": "^8.48.0",
+    "eslint-config-standard-with-typescript": "^39.0.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
+  }
+}
