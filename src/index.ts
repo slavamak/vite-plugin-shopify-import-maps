@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import modulepreload from './modulepreload'
+import preloadHelper from './preload-helper'
 import importmaps from './import-maps'
 import type { PluginOptions } from './types'
 
@@ -9,7 +9,7 @@ import type { PluginOptions } from './types'
  */
 const vitePluginShopifyImportMaps = (options: PluginOptions): Plugin[] => {
   const plugins = [
-    modulepreload(),
+    preloadHelper(),
     importmaps(options)
   ]
 

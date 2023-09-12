@@ -4,10 +4,10 @@ const preloadMethod = '__vitePreload'
 const preloadHelperId = '\0vite/preload-helper'
 
 /**
- * Customizes the Vite module preload function to work with import-maps.
+ * Customizes the Vite preload helper to work with import-maps.
  * @see {@link https://github.com/vitejs/vite/blob/main/packages/vite/src/node/plugins/importAnalysisBuild.ts Source code}
  */
-export default function modulepreload (): Plugin {
+export default function preloadHelper (): Plugin {
   const preloadCode = `
     const assetsURL = ${assetsURL.toString()}
     const seen = {}
@@ -15,7 +15,7 @@ export default function modulepreload (): Plugin {
   `
 
   return {
-    name: 'vite-plugin-shopify-import-maps:modulepreload',
+    name: 'vite-plugin-shopify-import-maps:preload-helper',
     apply: 'build',
     enforce: 'post',
     resolveId (id) {
