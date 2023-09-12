@@ -17,6 +17,7 @@ export default function modulepreload (): Plugin {
   return {
     name: 'vite-plugin-shopify-import-maps:modulepreload',
     apply: 'build',
+    enforce: 'post',
     resolveId (id) {
       if (id === preloadHelperId) {
         return id
@@ -30,31 +31,23 @@ export default function modulepreload (): Plugin {
   }
 }
 
-const assetsURL = function (dep: string): string {
-  const importmap = document.querySelector('[type=importmap]')
-
-  if (importmap !== null) {
-    const { imports }: { imports: Record<string, string> } = JSON.parse(importmap.innerHTML)
-    const href: string | undefined = imports[dep]
-
-    if (href !== undefined) {
-      return href
-    }
-  }
-
-  return dep
+const assetsURL = function (dep: string, importerUrl?: string): string {
+  // @ts-expect-error import.meta.resolve return a string
+  return import.meta.resolve(dep, importerUrl)
 }
 
-const seen: Record<string, boolean> = {}
+declare const seen: Record<string, boolean>
 
-function preload (baseModule: () => Promise<unknown>, deps: string[]): Promise<unknown> | undefined {
+function preload (baseModule: () => Promise<unknown>, deps: string[], importerUrl?: string): Promise<unknown> | undefined {
   if (deps === undefined || deps.length === 0) {
     return baseModule()
   }
 
+  const links = document.getElementsByTagName('link')
+
   return Promise.all(
     deps.map(async (dep) => {
-      const depUrl = assetsURL(dep)
+      const depUrl = assetsURL(dep, importerUrl)
 
       if (dep in seen) {
         return dep
@@ -64,9 +57,17 @@ function preload (baseModule: () => Promise<unknown>, deps: string[]): Promise<u
 
       const isCss = dep.endsWith('.css')
       const cssSelector = isCss ? '[rel="stylesheet"]' : ''
-      const depLink = document.querySelector(`link[href="${depUrl}"]${cssSelector}`)
+      const isBaseRelative = !(importerUrl === null)
 
-      if (depLink !== null) {
+      if (isBaseRelative) {
+        for (let i = links.length - 1; i >= 0; i--) {
+          const link = links[i]
+
+          if (link.href === dep && (!isCss || link.rel === 'stylesheet')) {
+            return dep
+          }
+        }
+      } else if (document.querySelector(`link[href="${dep}"]${cssSelector}`) !== null) {
         return dep
       }
 
