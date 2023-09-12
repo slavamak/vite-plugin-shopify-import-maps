@@ -48,4 +48,3 @@ export default defineConfig({
 
 ## Acknowledges
 - [shopify-vite](https://github.com/barrel/shopify-vite/) - Shopify theme development using Vite
-- [asset-mapper](https://github.com/KonnorRogers/asset-mapper) - Mapping JS bundles to manifests
