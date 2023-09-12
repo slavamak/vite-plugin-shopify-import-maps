@@ -1,7 +1,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # vite-plugin-shopify-import-maps
-The `vite-plugin-shopify-import-maps` plugin enhances Shopify themes by adding support for [import-maps](https://github.com/WICG/import-maps) to resolve assets.
+The `vite-plugin-shopify-import-maps` plugin enhances Shopify themes by adding support for [import-maps](https://github.com/WICG/import-maps) which can be used to control the resolution of module specifiers.
 
 ## Usage
 
