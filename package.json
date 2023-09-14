@@ -33,7 +33,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --ext .ts ."
+    "lint": "eslint --ext .ts .",
+    "release": "bumpp && pnpm publish"
   },
   "eslintConfig": {
     "root": true,
@@ -52,6 +53,7 @@
       "dist"
     ]
   },
+  "packageManager": "pnpm@8.7.5",
   "tsup": {
     "entry": [
       "./src/index.ts"
@@ -63,6 +65,7 @@
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/node": "^20.5.9",
+    "bumpp": "^9.2.0",
     "eslint": "^8.48.0",
     "eslint-config-standard-with-typescript": "^39.0.0",
     "tsup": "^7.2.0",
