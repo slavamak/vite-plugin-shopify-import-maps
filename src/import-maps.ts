@@ -6,12 +6,12 @@ import type { PluginOptions } from './types'
 /**
  * Generates an import map file from a Vite bundle.
  * @param {Object} options - The plugin options.
- * @property {string} options.filename - The name of the import map file.
- * @property {string} options.outDir - The output directory for the import map file.
+ * @property {string} options.snippetFile - Specifies the file name of the snippet that include import map.
+ * @property {string} options.themeRoot - Root path to your Shopify theme directory.
  */
 export default function importMaps (options: PluginOptions | undefined): Plugin {
   const defaultFilename = 'importmap.liquid'
-  const filename = options?.filename ?? defaultFilename
+  const filename = options?.snippetFile ?? defaultFilename
 
   let config: ResolvedConfig
 
@@ -23,7 +23,7 @@ export default function importMaps (options: PluginOptions | undefined): Plugin 
       config = resolvedConfig
     },
     async writeBundle (_, bundle) {
-      const outDir = path.resolve(options?.outDir ?? './snippets')
+      const outDir = path.resolve(options?.themeRoot ?? './', 'snippets')
       const importMapFile = path.join(outDir, filename)
       const importMap = new Map<string, string>()
 

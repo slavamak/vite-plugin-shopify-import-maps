@@ -1,4 +1,4 @@
 export interface PluginOptions {
-  filename: string
-  outDir: string
+  snippetFile: string
+  themeRoot: string
 }
