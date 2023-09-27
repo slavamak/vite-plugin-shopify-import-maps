@@ -8,7 +8,7 @@ import type { PluginOptions } from './types'
  * which can be used to control the resolution of module specifiers.
  * @see {@link https://github.com/slavamak/vite-plugin-shopify-import-maps GitHub}
  */
-const vitePluginShopifyImportMaps = (options: PluginOptions): Plugin[] => {
+const vitePluginShopifyImportMaps = (options?: PluginOptions): Plugin[] => {
   const plugins = [
     preloadHelper(),
     importMaps(options)

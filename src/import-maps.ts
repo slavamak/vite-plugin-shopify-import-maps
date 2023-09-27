@@ -9,7 +9,7 @@ import type { PluginOptions } from './types'
  * @property {string} options.snippetFile - Specifies the file name of the snippet that include import map.
  * @property {string} options.themeRoot - Root path to your Shopify theme directory.
  */
-export default function importMaps (options: PluginOptions | undefined): Plugin {
+export default function importMaps (options?: PluginOptions): Plugin {
   const defaultFilename = 'importmap.liquid'
   const filename = options?.snippetFile ?? defaultFilename
 
