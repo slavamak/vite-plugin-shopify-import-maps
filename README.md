@@ -55,6 +55,7 @@ import { defineConfig } from 'vite'
 import shopify from 'vite-plugin-shopify'
 import importMaps from 'vite-plugin-shopify-import-maps'
 
+// Recommended configuration
 export default defineConfig({
   build: {
     rollupOptions: {
@@ -65,7 +66,7 @@ export default defineConfig({
       },
     },
   },
-  plugins: [shopify(), importMaps()],
+  plugins: [shopify({ versionNumbers: true }), importMaps()],
 })
 ```
 
