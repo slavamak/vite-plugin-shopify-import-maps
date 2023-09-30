@@ -12,19 +12,26 @@ import type { PluginOptions } from './types'
 export default function importMaps (options?: PluginOptions): Plugin {
   const defaultFilename = 'importmap.liquid'
   const filename = options?.snippetFile ?? defaultFilename
+  const outDir = path.resolve(options?.themeRoot ?? './', 'snippets')
+  const importMapFile = path.join(outDir, filename)
 
   let config: ResolvedConfig
 
   return {
     name: 'vite-plugin-shopify-import-maps:import-maps',
-    apply: 'build',
     enforce: 'post',
     configResolved (resolvedConfig) {
       config = resolvedConfig
     },
+    async buildStart () {
+      if (config.command === 'serve') {
+        await fs.writeFile(
+          importMapFile,
+          ''
+        )
+      }
+    },
     async writeBundle (_, bundle) {
-      const outDir = path.resolve(options?.themeRoot ?? './', 'snippets')
-      const importMapFile = path.join(outDir, filename)
       const importMap = new Map<string, string>()
 
       await Promise.allSettled(
