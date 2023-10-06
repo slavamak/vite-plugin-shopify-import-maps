@@ -36,12 +36,10 @@ export default function importMaps (options?: PluginOptions): Plugin {
 
       await Promise.allSettled(
         Object.keys(bundle).map(async (fileName) => {
-          if (fileName.endsWith('manifest.json')) {
-            return
+          if (fileName.endsWith('.js')) {
+            importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
+            importMap.set(`${config.base}${fileName}`, `{{ '${fileName}' | asset_url }}`)
           }
-
-          importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
-          importMap.set(`${config.base}${fileName}`, `{{ '${fileName}' | asset_url }}`)
         })
       )
 
