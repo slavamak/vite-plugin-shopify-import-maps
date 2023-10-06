@@ -41,6 +41,7 @@ export default function importMaps (options?: PluginOptions): Plugin {
           }
 
           importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
+          importMap.set(`${config.base}${fileName}`, `{{ '${fileName}' | asset_url }}`)
         })
       )
 
