@@ -81,17 +81,16 @@ Root path to your Shopify theme directory.
 
 Specifies the file name of the snippet that include import map.
 
-## Trouble shooting
+## Troubleshooting
 
 If you have any problems or have suggestions, welcome to [issues](https://github.com/slavamak/vite-plugin-shopify-import-maps/issues).
 
 ### Importing asset files (e.g. fonts, images) does not use the version parameter from Shopify CDN
 
-This is not the scope of import map, as it is are designed to manage javascript modules.
+This is not the scope of import map, as it is are designed to manage javascript modules. But you can look at several approaches:
 
-A compromise for this might be to use hashed filenames for assets. See the `vite.config.js` file example above.
-
-An alternative approach could be to load assets from Liquid files using the `asset_url` filter and consume them via CSS variables.
+1. The first approach for this might be to use hashed filenames for assets. See the `vite.config.js` file example above.
+2. An alternative approach could be to load assets from Liquid files using the `asset_url` filter and consume them via CSS variables:
 
 ```liquid
 {% #theme.liquid %}
