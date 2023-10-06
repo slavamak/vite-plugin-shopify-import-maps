@@ -40,6 +40,7 @@ export default function importMaps (options?: PluginOptions): Plugin {
             return
           }
 
+          importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
           importMap.set(`${config.base}${fileName}`, `{{ '${fileName}' | asset_url }}`)
         })
       )
@@ -48,7 +49,7 @@ export default function importMaps (options?: PluginOptions): Plugin {
 
       await fs.writeFile(
         importMapFile,
-        `<base href="{{ 'base' | asset_url | split: 'base' | first }}">\n<script type="importmap">\n${json}\n</script>`,
+        `<script type="importmap">\n${json}\n</script>`,
         { encoding: 'utf8' }
       )
 
