@@ -4,10 +4,6 @@ import path from 'node:path'
 import { parse } from 'es-module-lexer'
 import MagicString from 'magic-string'
 
-function buildSpecifierKey (name: string, group: string): string {
-  return group + '/' + name
-}
-
 /**
  * Use bare specifier in import module statements defined in bareModules option groups.
  */
@@ -90,7 +86,7 @@ export default function bareModules (options: PluginOptions): Plugin {
             }
           }
 
-          if (code.hasChanged() === true) {
+          if (code.hasChanged()) {
             chunk.code = code.toString()
 
             if (options.sourcemap !== false) {
@@ -101,4 +97,8 @@ export default function bareModules (options: PluginOptions): Plugin {
       })
     }
   }
+}
+
+function buildSpecifierKey (name: string, group: string): string {
+  return group + '/' + name
 }

@@ -1,7 +1,7 @@
 import type { Plugin, ResolvedConfig } from 'vite'
+import type { PluginOptions } from './types'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import type { PluginOptions } from './types'
 
 /**
  * Generates an import map file from a Vite bundle.
