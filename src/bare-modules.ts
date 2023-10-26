@@ -90,10 +90,12 @@ export default function bareModules (options: PluginOptions): Plugin {
             }
           }
 
-          chunk.code = code.toString()
+          if (code.hasChanged() === true) {
+            chunk.code = code.toString()
 
-          if (options.sourcemap !== false) {
-            chunk.map = code.generateMap({ hires: true }) as Rollup.SourceMap
+            if (options.sourcemap !== false) {
+              chunk.map = code.generateMap({ hires: true }) as Rollup.SourceMap
+            }
           }
         }
       })
