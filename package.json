@@ -34,6 +34,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts .",
+    "prepublish": "tsup",
     "release": "bumpp && pnpm publish"
   },
   "eslintConfig": {
