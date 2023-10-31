@@ -11,22 +11,18 @@ Before using this plugin, make sure you have the [vite-plugin-shopify](https://g
 ## Install
 
 ```bash
-npm i vite-plugin-shopify-import-maps -D
+npm i -D vite-plugin-shopify-import-maps
 
 # yarn
-yarn add vite-plugin-shopify-import-maps -D
+yarn add -D vite-plugin-shopify-import-maps
 
 # pnpm
-pnpm add vite-plugin-shopify-import-maps -D
+pnpm add -D vite-plugin-shopify-import-maps
 ```
 
 ## Usage
 
-1. Add ES Module Shims [polyfill](https://github.com/guybedford/es-module-shims#usage) to the `<head>` tag in your `theme.liquid` file:
-
-```liquid
-<script src="{{ 'es-module-shims.js' | asset_url }}" async></script>
-```
+1. Add [ES Module Shims](https://github.com/guybedford/es-module-shims#usage) to the `<head>` tag in your `theme.liquid` file.
 
 2. Render the `importmap` snippet file **before** performing any imports:
 
@@ -54,12 +50,14 @@ export default defineConfig({
       output: {
         entryFileNames: "[name].js",
         chunkFileNames: "[name].js",
-        assetFileNames: "[name]-[hash].[ext]",
-        minifyInternalExports: false,
+        assetFileNames: "[name].[ext]",
       },
     },
   },
-  plugins: [shopify({ versionNumbers: true }), importMaps()],
+  plugins: [
+    shopify({ versionNumbers: true }),
+    importMaps({ bareModules: true })
+  ],
 });
 ```
 
@@ -81,16 +79,67 @@ Root path to your Shopify theme directory.
 
 Specifies the file name of the snippet that include import map.
 
+### bareModules
+
+- **Type:** `boolean | BareModules`
+- **Default:** `false`
+
+```ts
+export interface BareModules {
+  defaultGroup: string
+  groups: Record<string, string | RegExp | Array<string | RegExp>>
+}
+```
+
+Configure bare specifier remapping for JavaScript modules.
+
+Example:
+
+```ts
+export default defineConfig({
+  plugins: [
+    importMap({
+      bareModules: {
+        defaultGroup: 'main', // By default is 'main'
+        groups: {
+          helpers: /frontend\/lib/, // RegExp pattern
+          vendors: 'node_modules', // String
+          general: ['frontend/entrypoints', /vite/], // Array of string or RegExp pattern
+        },
+      },
+    }),
+  ],
+})
+```
+
+This generates the `importmap.liquid` file:
+
+```liquid
+<script type="importmap">
+{
+  "imports": {
+    "general/customers": "{{ 'customers.js' | asset_url }}",
+    "general/modulepreload-polyfill": "{{ 'modulepreload-polyfill.js' | asset_url }}",
+    "general/theme": "{{ 'theme.js' | asset_url }}",
+    "helpers/customer-address": "{{ 'customer-address.js' | asset_url }}",
+    "helpers/shopify_common": "{{ 'shopify_common.js' | asset_url }}",
+    "helpers/utils": "{{ 'utils.js' | asset_url }}",
+    "main/header-drawer": "{{ 'header-drawer.js' | asset_url }}",
+    "main/localization-form": "{{ 'localization-form.js' | asset_url }}",
+    "main/product-recommendations": "{{ 'product-recommendations.js' | asset_url }}",
+    "vendors/lodash": "{{ 'lodash.js' | asset_url }}"
+  }
+}
+</script>
+```
+
 ## Troubleshooting
 
 If you have any problems or have suggestions, welcome to [issues](https://github.com/slavamak/vite-plugin-shopify-import-maps/issues).
 
 ### Importing asset files (e.g. fonts, images) does not use the version parameter from Shopify CDN
 
-This is not the scope of import map, as it is are designed to manage javascript modules. But you can look at several approaches:
-
-1. The first approach for this might be to use hashed filenames for assets. See the `vite.config.js` file example above.
-2. An alternative approach could be to load assets from Liquid files using the `asset_url` filter and consume them via CSS variables:
+This is not the scope of import map, as it is are designed to manage javascript modules. But you can load assets from Liquid files using the `asset_url` filter and consume them via CSS variables:
 
 ```liquid
 {% #theme.liquid %}
@@ -110,7 +159,7 @@ This is not the scope of import map, as it is are designed to manage javascript 
 ```
 
 ```css
-/* entrypoints/theme.css */
+/* styles.css */
 
 h1,
 h2,

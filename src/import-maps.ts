@@ -1,21 +1,17 @@
 import type { Plugin, ResolvedConfig } from 'vite'
+import type { PluginOptions } from './types'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import type { PluginOptions } from './types'
 
 /**
  * Generates an import map file from a Vite bundle.
- * @param {Object} options - The plugin options.
- * @property {string} options.snippetFile - Specifies the file name of the snippet that include import map.
- * @property {string} options.themeRoot - Root path to your Shopify theme directory.
  */
-export default function importMaps (options?: PluginOptions): Plugin {
-  const defaultFilename = 'importmap.liquid'
-  const filename = options?.snippetFile ?? defaultFilename
-  const outDir = path.resolve(options?.themeRoot ?? './', 'snippets')
-  const importMapFile = path.join(outDir, filename)
+export default function importMaps (options: PluginOptions): Plugin {
+  const outDir = path.resolve(options.themeRoot, 'snippets')
+  const importMapFile = path.join(outDir, options.snippetFile)
 
   let config: ResolvedConfig
+  let moduleSpecifierMap: Map<string, string>
 
   return {
     name: 'vite-plugin-shopify-import-maps:import-maps',
@@ -23,7 +19,14 @@ export default function importMaps (options?: PluginOptions): Plugin {
     configResolved (resolvedConfig) {
       config = resolvedConfig
     },
-    async buildStart () {
+    async buildStart ({ plugins }) {
+      if (options.bareModules !== false) {
+        const bareModulesPlugin = plugins.find((plugin) => plugin.name.includes('bare-modules'))
+        if (bareModulesPlugin !== undefined) {
+          moduleSpecifierMap = bareModulesPlugin.api.moduleSpecifierMap
+        }
+      }
+
       if (config.command === 'serve') {
         await fs.writeFile(
           importMapFile,
@@ -34,11 +37,24 @@ export default function importMaps (options?: PluginOptions): Plugin {
     async writeBundle (_, bundle) {
       const importMap = new Map<string, string>()
 
+      let chunks: string[][]
+
+      if (options.bareModules === false) {
+        chunks = Object.entries(bundle)
+          .filter(([_, chunk]) => chunk.type === 'chunk')
+          .map(([fileName]) => [fileName, config.base + fileName])
+      } else {
+        chunks = Array.from(moduleSpecifierMap.entries())
+      }
+
+      const sortedChunks = chunks.sort((a, b) => a[1].localeCompare(b[1]))
+
       await Promise.allSettled(
-        Object.keys(bundle).map(async (fileName) => {
-          if (fileName.endsWith('.js')) {
+        sortedChunks.map(async ([fileName, specifireKey]) => {
+          importMap.set(specifireKey, `{{ '${fileName}' | asset_url }}`)
+
+          if (options.bareModules === false) {
             importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
-            importMap.set(`${config.base}${fileName}`, `{{ '${fileName}' | asset_url }}`)
           }
         })
       )
