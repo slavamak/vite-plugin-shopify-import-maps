@@ -56,7 +56,7 @@ export default defineConfig({
   },
   plugins: [
     shopify({ versionNumbers: true }),
-    importMaps({ bareModules: true })
+    importMaps({ bareModules: true }),
   ],
 });
 ```
@@ -86,8 +86,8 @@ Specifies the file name of the snippet that include import map.
 
 ```ts
 export interface BareModules {
-  defaultGroup: string
-  groups: Record<string, string | RegExp | Array<string | RegExp>>
+  defaultGroup: string;
+  groups: Record<string, string | RegExp | Array<string | RegExp>>;
 }
 ```
 
@@ -100,16 +100,16 @@ export default defineConfig({
   plugins: [
     importMap({
       bareModules: {
-        defaultGroup: 'main', // By default is 'main'
+        defaultGroup: "main", // By default is 'main'
         groups: {
           helpers: /frontend\/lib/, // RegExp pattern
-          vendors: 'node_modules', // String
-          general: ['frontend/entrypoints', /vite/], // Array of string or RegExp pattern
+          vendors: "node_modules", // String
+          general: ["frontend/entrypoints", /vite/], // Array of string or RegExp pattern
         },
       },
     }),
   ],
-})
+});
 ```
 
 This generates the `importmap.liquid` file:
@@ -131,6 +131,18 @@ This generates the `importmap.liquid` file:
   }
 }
 </script>
+```
+
+### modulePreload
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+This option when set to `true`, generates `modulepreload` link tags below the import map script tag.
+
+```liquid
+<link rel="modulepreload" href="{{ 'customers.js' | asset_url }}">
+<link rel="modulepreload" href="{{ 'theme.js' | asset_url }}">
 ```
 
 ## Troubleshooting
