@@ -39,26 +39,26 @@ pnpm add -D vite-plugin-shopify-import-maps
 3. Add the `vite-plugin-shopify-import-maps` to your `vite.config.js` file:
 
 ```js
-import { defineConfig } from "vite";
-import shopify from "vite-plugin-shopify";
-import importMaps from "vite-plugin-shopify-import-maps";
+import { defineConfig } from 'vite'
+import shopify from 'vite-plugin-shopify'
+import importMaps from 'vite-plugin-shopify-import-maps'
 
 // Recommended configuration
 export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
-      },
-    },
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]'
+      }
+    }
   },
   plugins: [
     shopify({ versionNumbers: true }),
-    importMaps({ bareModules: true }),
-  ],
-});
+    importMaps({ bareModules: true })
+  ]
+})
 ```
 
 After executing the build command, the `importmap.liquid` file will be generated in the `snippets` folder in your theme root directory.
@@ -86,8 +86,8 @@ Specifies the file name of the snippet that include import map.
 
 ```ts
 export interface BareModules {
-  defaultGroup: string;
-  groups: Record<string, string | RegExp | Array<string | RegExp>>;
+  defaultGroup: string
+  groups: Record<string, string | RegExp | Array<string | RegExp>>
 }
 ```
 
@@ -100,16 +100,16 @@ export default defineConfig({
   plugins: [
     importMap({
       bareModules: {
-        defaultGroup: "main", // By default is 'main'
+        defaultGroup: 'main', // By default is 'main'
         groups: {
           helpers: /frontend\/lib/, // RegExp pattern
-          vendors: "node_modules", // String
-          general: ["frontend/entrypoints", /vite/], // Array of string or RegExp pattern
-        },
-      },
-    }),
-  ],
-});
+          vendors: 'node_modules', // String
+          general: ['frontend/entrypoints', /vite/] // Array of string or RegExp pattern
+        }
+      }
+    })
+  ]
+})
 ```
 
 This generates the `importmap.liquid` file:
