@@ -9,22 +9,24 @@ import bareModules from './bare-modules'
  * which can be used to control the resolution of module specifiers.
  * @see {@link https://github.com/slavamak/vite-plugin-shopify-import-maps GitHub}
  */
-const vitePluginShopifyImportMaps = (userOptions?: PluginOptions): Plugin[] => {
+const vitePluginShopifyImportMaps = (userOptions?: Partial<PluginOptions>): Plugin[] => {
   const {
     snippetFile = 'importmap.liquid',
     themeRoot = './',
+    modulePreload = false,
     bareModules: bareModulesOption = false
   } = userOptions ?? {}
 
   const plugins = [
     preloadHelper(),
-    importMaps({ snippetFile, themeRoot, bareModules: bareModulesOption })
+    importMaps({ snippetFile, themeRoot, modulePreload, bareModules: bareModulesOption })
   ]
 
   if (bareModulesOption !== false) {
     plugins.push(bareModules({
       snippetFile,
       themeRoot,
+      modulePreload,
       bareModules: { ...{ defaultGroup: 'main', groups: {} }, ...(bareModulesOption as BareModules) }
     }))
   }

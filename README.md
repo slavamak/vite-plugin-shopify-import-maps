@@ -39,26 +39,26 @@ pnpm add -D vite-plugin-shopify-import-maps
 3. Add the `vite-plugin-shopify-import-maps` to your `vite.config.js` file:
 
 ```js
-import { defineConfig } from "vite";
-import shopify from "vite-plugin-shopify";
-import importMaps from "vite-plugin-shopify-import-maps";
+import { defineConfig } from 'vite'
+import shopify from 'vite-plugin-shopify'
+import importMaps from 'vite-plugin-shopify-import-maps'
 
 // Recommended configuration
 export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
-      },
-    },
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]'
+      }
+    }
   },
   plugins: [
     shopify({ versionNumbers: true }),
     importMaps({ bareModules: true })
-  ],
-});
+  ]
+})
 ```
 
 After executing the build command, the `importmap.liquid` file will be generated in the `snippets` folder in your theme root directory.
@@ -104,11 +104,11 @@ export default defineConfig({
         groups: {
           helpers: /frontend\/lib/, // RegExp pattern
           vendors: 'node_modules', // String
-          general: ['frontend/entrypoints', /vite/], // Array of string or RegExp pattern
-        },
-      },
-    }),
-  ],
+          general: ['frontend/entrypoints', /vite/] // Array of string or RegExp pattern
+        }
+      }
+    })
+  ]
 })
 ```
 
@@ -131,6 +131,18 @@ This generates the `importmap.liquid` file:
   }
 }
 </script>
+```
+
+### modulePreload
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+This option when set to `true`, generates `modulepreload` link tags below the import map script tag.
+
+```liquid
+<link rel="modulepreload" href="{{ 'customers.js' | asset_url }}">
+<link rel="modulepreload" href="{{ 'theme.js' | asset_url }}">
 ```
 
 ## Troubleshooting

@@ -7,4 +7,5 @@ export interface PluginOptions {
   snippetFile: string
   themeRoot: string
   bareModules: boolean | BareModules
+  modulePreload: boolean
 }
