@@ -36,6 +36,7 @@ export default function importMaps (options: PluginOptions): Plugin {
     },
     async writeBundle (_, bundle) {
       const importMap = new Map<string, string>()
+      const modulePreloadTags: string[] = []
 
       let chunks: string[][]
 
@@ -56,14 +57,20 @@ export default function importMaps (options: PluginOptions): Plugin {
           if (options.bareModules === false) {
             importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
           }
+
+          if (options.modulePreload) {
+            modulePreloadTags.push(`<link rel="modulepreload" href="{{ '${fileName}' | asset_url }}">`)
+          }
         })
       )
 
       const json = JSON.stringify({ imports: Object.fromEntries(importMap) }, null, 2)
+      const scriptTag = `<script type="importmap">\n${json}\n</script>`
+      const fileContents = options.modulePreload ? scriptTag + '\n\n' + modulePreloadTags.join('\n') : scriptTag
 
       await fs.writeFile(
         importMapFile,
-        `<script type="importmap">\n${json}\n</script>`,
+        fileContents,
         { encoding: 'utf8' }
       )
 

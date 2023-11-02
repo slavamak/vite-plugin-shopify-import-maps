@@ -13,18 +13,20 @@ const vitePluginShopifyImportMaps = (userOptions?: PluginOptions): Plugin[] => {
   const {
     snippetFile = 'importmap.liquid',
     themeRoot = './',
+    modulePreload = false,
     bareModules: bareModulesOption = false
   } = userOptions ?? {}
 
   const plugins = [
     preloadHelper(),
-    importMaps({ snippetFile, themeRoot, bareModules: bareModulesOption })
+    importMaps({ snippetFile, themeRoot, modulePreload, bareModules: bareModulesOption })
   ]
 
   if (bareModulesOption !== false) {
     plugins.push(bareModules({
       snippetFile,
       themeRoot,
+      modulePreload,
       bareModules: { ...{ defaultGroup: 'main', groups: {} }, ...(bareModulesOption as BareModules) }
     }))
   }
