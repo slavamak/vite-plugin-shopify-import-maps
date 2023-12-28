@@ -19,9 +19,9 @@ export default function importMaps (options: PluginOptions): Plugin {
     configResolved (resolvedConfig) {
       config = resolvedConfig
     },
-    async buildStart ({ plugins }) {
+    async buildStart () {
       if (options.bareModules !== false) {
-        const bareModulesPlugin = plugins.find((plugin) => plugin.name.includes('bare-modules'))
+        const bareModulesPlugin = config.plugins.find((plugin) => plugin.name.includes('bare-modules'))
         if (bareModulesPlugin !== undefined) {
           moduleSpecifierMap = bareModulesPlugin.api.moduleSpecifierMap
         }
