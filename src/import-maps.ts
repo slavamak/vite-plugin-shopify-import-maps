@@ -38,21 +38,22 @@ export default function importMaps (options: PluginOptions): Plugin {
       const importMap = new Map<string, string>()
       const modulePreloadTags: string[] = []
 
-      let chunks: string[][]
+      const chunks = Object.entries(bundle)
+        .filter(([_, chunk]) => chunk.type === 'chunk')
+        .map(([fileName]) => {
+          const specifier = moduleSpecifierMap.get(fileName)
+          const specifierKey = options.bareModules === false || specifier === undefined
+            ? config.base + fileName
+            : specifier
 
-      if (options.bareModules === false) {
-        chunks = Object.entries(bundle)
-          .filter(([_, chunk]) => chunk.type === 'chunk')
-          .map(([fileName]) => [fileName, config.base + fileName])
-      } else {
-        chunks = Array.from(moduleSpecifierMap.entries())
-      }
+          return [fileName, specifierKey]
+        })
 
       const sortedChunks = chunks.sort((a, b) => a[1].localeCompare(b[1]))
 
       await Promise.allSettled(
-        sortedChunks.map(async ([fileName, specifireKey]) => {
-          importMap.set(specifireKey, `{{ '${fileName}' | asset_url }}`)
+        sortedChunks.map(async ([fileName, specifierKey]) => {
+          importMap.set(specifierKey, `{{ '${fileName}' | asset_url }}`)
 
           if (options.bareModules === false) {
             importMap.set(`{{ '${fileName}' | asset_url | split: '?' | first }}`, `{{ '${fileName}' | asset_url }}`)
