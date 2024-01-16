@@ -41,7 +41,7 @@ export default function importMaps (options: PluginOptions): Plugin {
       const chunks = Object.entries(bundle)
         .filter(([_, chunk]) => chunk.type === 'chunk')
         .map(([fileName]) => {
-          const specifier = moduleSpecifierMap.get(fileName)
+          const specifier = moduleSpecifierMap?.get(fileName)
           const specifierKey = options.bareModules === false || specifier === undefined
             ? config.base + fileName
             : specifier
