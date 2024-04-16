@@ -54,7 +54,7 @@
       "dist"
     ]
   },
-  "packageManager": "pnpm@8.7.5",
+  "packageManager": "pnpm@9.0.1",
   "tsup": {
     "entry": [
       "./src/index.ts"
